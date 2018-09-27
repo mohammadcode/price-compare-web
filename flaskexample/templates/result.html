@@ -10,7 +10,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Starter Template for Bootstrap</title>
+    <title>Price compare system.</title>
 
     <!-- Bootstrap core CSS -->
     <link href="../static/css/bootstrap.min.css" rel="stylesheet">
@@ -47,7 +47,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Project name</a>
+          <a class="navbar-brand" href="#">Price check!</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
@@ -86,6 +86,15 @@
                       {% endfor %}
                   </select>
               </div>
+              <div class="form-group">
+                  <label for="product_type">Product Type :</label>
+                  <select id="product_type" name="product_type" width="600px">
+                      <option SELECTED value='0'>Choose product type</option>  
+                      {% for x in product_type %}
+                        <option value= '{{ x }}'>{{x}}</option>
+                      {% endfor %}
+                  </select>
+              </div>
             <div>
               <button type="submit" class="btn btn-default btn-lg">Find these Products!</button>
             </div>
@@ -102,9 +111,9 @@
           </div>
     
           <table class="table table-hover">
-          <tr><th>Name</th><th>Price</th><th>Store</th></tr>
+          <tr><th>Name</th><th>Price</th><th>Unit</th><th>Store</th></tr>
           {% for product in products %}
-          <tr><td>{{ product['name'] }}</td><td>{{ product['price']}}</td><td>{{ product['store']}}</td></tr>
+          <tr><td>{{ product['name'] }}</td><td>{{ product['price']}}</td><td>{{ product['unit']}}</td><td>{{ product['store']}}</td></tr>
           {% endfor %}
           </table>
     
