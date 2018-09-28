@@ -32,12 +32,14 @@ for i in range(0,len(query_results)):
     sub_categories.append(dict(id=query_results[i][0], name=query_results[i][1],category_id=query_results[i][2]))       
 
 app.secret_key = "development-key"
-@app.route('/')
+'''@app.route('/')
 @app.route('/index')
 def index():
-   user = { 'nickname': 'Arif' } # fake user
+   user = { 'nickname': 'Mohammad Arifuzzaman' } # fake user
    return render_template("index.html",title = 'Home',user = user)
-
+'''
+@app.route('/')
+@app.route('/index')
 @app.route('/search')
 def search_input():
     return render_template("search.html", categories=categories)
@@ -47,11 +49,23 @@ def result():
     category = unquote(request.args.get('category'))
     #pull 'sub_category' from input field and store it
     sub_category = unquote(request.args.get('sub_category'))
-    #just select the sub_category  from the database for the category that the user inputs
-    sql_query = "SELECT * FROM products WHERE category= '" + category +"' AND  sub_category = '" + sub_category + "'"
-    cursor.execute(sql_query)
+    if len(request.args.get('product_type')) > 0:
+        product_type = unquote(request.args.get('product_type'))
+        product_type_query = "SELECT * FROM product_type WHERE name= '" + product_type + "'"
+        cursor.execute(product_type_query)
+        key_words = cursor.fetchone()
+
+    if key_words is None:
+        sql_query = "SELECT * FROM products WHERE category = %s AND sub_category = %s"
+        cursor.execute(sql_query,(category,sub_category))
+    else:
+        keyword = "%" + key_words[4] + "%" +key_words[5]
+        sql_query = "SELECT * FROM products WHERE category = %s AND sub_category = %s AND name LIKE %s"
+        cursor.execute(sql_query,(category,sub_category,keyword))
+
+    #cursor.execute(sql_query)
     query_results = cursor.fetchall()
-    print(query_results)
+    
     products = []
     for i in range(0,len(query_results)):
        products.append(dict(name=query_results[i][1], price=query_results[i][2], unit=query_results[i][8], store=query_results[i][4]))
